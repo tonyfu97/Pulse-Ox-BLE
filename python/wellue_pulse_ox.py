@@ -18,7 +18,7 @@ class WelluePulseOx:
             self.backend = 'bgapi'
 
     def connect(self):
-        self.adapter = pygatt.GATTToolBackend(self.interface) if self.backend == 'gatt' else pygatt.BGAPIBackend(serial_port=self.interface)
+        self.adapter = pygatt.GATTToolBackend(self.interface) if self.backend == 'gatt' else pygatt.BGAPIBackend()
         self.adapter.start()
 
         self.address = self.find_device_address(self.name)

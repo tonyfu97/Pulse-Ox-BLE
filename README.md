@@ -249,4 +249,24 @@ So far, we only write our PPG data into a text file, but how can we stream it li
 
 The above figure traces the data from the pulse oximeter to the final real-time plot. The data is first collected by the pulse oximeter, then sent to the computer via Bluetooth. The `WelluePulseOx` class in `wellue_pulse_ox.py` uses `pygatt` to subscribe to the pulse oximeter's data stream. The data is then processed by the `process()` function in `wellue_pulse_ox_lsl.py`. The processed data is then sent to the LSL stream via the `pylsl.StreamOutlet` class, via one of its methods called `push_sample()`. The LSL stream is then read by the `stream_test.py` script using the `pylsl.StreamInlet` class. The data is then plotted using `matplotlib`. 
 
+
+---
+
+
+### 5. Putting it all together
+
+I have put my code in the `python` folder. To visualize the PPG data in real-time, run the following scripts in order:
+
+```bash
+python3 wellue_pulse_ox_lsl.py
+```
+
+Keep this script running. It will connect to the pulse oximeter and start streaming the PPG data to the LSL stream. Then in a new terminal, run:
+
+```bash
+python3 stream_test.py
+```
+
+You should see a plot like this:
+
 ![pleth_live_screen](./images/pleth_live_screen.gif)
