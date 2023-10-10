@@ -29,10 +29,6 @@ Stream and visualize plethysmogram (PPG) data from Wellue Bluetooth Pulse Oximet
 
 ### 1. Understand your pulse oximeter
 
-Wellue provides an app called ViHealth to connect and visualize the data from their pulse oximter:
-
-![vihealth](./images/vihealth_app.jpeg)
-
 Before we start, we must get the UUIDs of the services of the pulse oximeter. We can download the "BLE Scanner" app from the App Store to do this. Once downloaded, connect to the pulse oximeter and open the BLE scanner app. Look for a device called "OxySmart" and click on it. You should see the following screen:
 
 ![ble_scanner1](./images/ble_scanner1.PNG)
@@ -215,7 +211,7 @@ plt.show()
 
 ![pleth_data_R_waves_present](./images/pleth_data_R_waves_present.png)
 
-We can see that the PPG data comes with a spike in values that coincides with the R wave of the ECG signal. Taking a closer look at the PPG data stored in `pleth_data.txt` reveals that the R-wave present signal is actually encoded by setting the most significant bit (MSB) of the data point to 1. This makes these data points 128 larger than the actual value. We can fix this by subtracting 128 from these data points:
+We can see that the PPG data comes with a spike in values that coincides with the systolic peaks of the ECG signal. Taking a closer look at the PPG data stored in `pleth_data.txt` reveals that the systolic peak signal is actually encoded by setting the most significant bit (MSB) of the data point to 1. This makes these data points 128 larger than the actual value. We can fix this by subtracting 128 from these data points:
 
 ```python
     def _handle_data(self, handle, data):
@@ -229,7 +225,7 @@ We can see that the PPG data comes with a spike in values that coincides with th
             with open("pleth_data.txt", "a") as f:
                 for i, b in enumerate(pleth_data_as_int):
                     if b > 127:
-                        b = b - 128  # the first bit marks the R wave
+                        b = b - 128  # the first bit marks the systolic peak
                     f.write(f"{b} ")
 ```
 
@@ -270,3 +266,15 @@ python3 stream_test.py
 You should see a plot like this:
 
 ![pleth_live_screen](./images/pleth_live_screen.gif)
+
+
+---
+
+
+### 6. Future work
+
+* Add time stamps to the data stream.
+* Use peak detection with a sliding window and thresholding to detect the systolic peaks in real-time, and then compare the systolic peaks calculated with the systolic peak signal from the pulse oximeter.
+* Compare the heart rate calculated with the heart rate signal from the pulse oximeter.
+* Extract the SpO2 value from the data stream.
+* Improve handling of corrupted data packets. Currently, all corrupted packets are discarded, leading to a loss of data.
