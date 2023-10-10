@@ -20,7 +20,6 @@ def process(data):
     for ii in range(CHUNK_SIZE):
         outlet.push_sample(data[:, ii])
 
-
 pulseOx = WelluePulseOx(name=DEVICE_NAME, callback=process)
 pulseOx.connect()
 pulseOx.start()
