@@ -59,8 +59,8 @@ class WelluePulseOx:
         timestamp = self.time_func()  # TODO: use the timestamp from the device
 
         # Check if data starts with the header and has the correct length
-        if data.startswith(b'\xaaU\x0f\x07\x02') and len(data) == 11:
-            pleth_data = data[5:-1]  # Skip the first 5 bytes and omit the last byte
+        if data.startswith(b'\xaaU\x0f\x07\x02') and len(data) >= 11:
+            pleth_data = data[5:10]  # Skip the first 5 bytes and omit the last byte
             # Convert bytes to integers and print them as a list
             pleth_data_as_int = [int(b) for b in pleth_data]
             with open("pleth_data.txt", "a") as f:
