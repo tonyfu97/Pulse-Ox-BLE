@@ -1,5 +1,4 @@
 from itertools import combinations
-from tqdm import tqdm
 import ast
 
 def reverse_engineering_packet(packet):
@@ -45,4 +44,3 @@ if __name__ == "__main__":
             # Convert the string back to its byte representation
             packet_as_bytes = bytes(ast.literal_eval("b'" + line.strip() + "'"))
             reverse_engineering_packet(packet_as_bytes)
-            # break

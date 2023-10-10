@@ -2,16 +2,14 @@ import platform
 from time import time
 import numpy as np
 import pygatt
-import bitstring
 
 CHUNK_SIZE = 5
 
 class WelluePulseOx:
-    def __init__(self, callback=None, interface=None, time_func=time, name=None):
+    def __init__(self, callback=None, time_func=time, name=None):
         self.address = None
         self.name = name
         self.callback = callback
-        self.interface = interface
         self.time_func = time_func
 
         if platform.system() == "Linux":
@@ -25,7 +23,7 @@ class WelluePulseOx:
 
         self.address = self.find_device_address(self.name)
         if not self.address:
-            raise ValueError(f"Can't find Device {self.name}")
+            raise ValueError(f"Can't find Device {self.name}. Have you disconnected it from the other device?")
 
         print(f"Connecting to {self.name} with address {self.address}...")
         self.device = self.adapter.connect(self.address, address_type=pygatt.BLEAddressType.random, timeout=10)
@@ -58,7 +56,7 @@ class WelluePulseOx:
         self.data = np.zeros((1, CHUNK_SIZE))
 
     def _handle_data(self, handle, data):
-        timestamp = self.time_func()
+        timestamp = self.time_func()  # TODO: use the timestamp from the device
 
         # Check if data starts with the header and has the correct length
         if data.startswith(b'\xaaU\x0f\x07\x02') and len(data) == 11:
@@ -74,7 +72,6 @@ class WelluePulseOx:
 
             self.callback(self.data)
             self._init_sample()
-
         
         # with open("packets.txt", "a") as f:
         #     raw_data = repr(data)[12:-2]

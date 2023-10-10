@@ -21,13 +21,13 @@ if __name__ == "__main__":
 
     plt.ion()  # Turn on interactive mode
     fig, ax = plt.subplots()
-    y = np.array([])  # Initialize an empty array for y-data (pulse_ox_data)
+    y = np.array([])
 
     line, = ax.plot([], [])
-    ax.set_ylim([0, 128])  # Set y-axis limits; adjust as needed
-    ax.set_xlim([0, 200])  # Set x-axis limits; adjust as needed
+    ax.set_ylim([0, 128])
+    ax.set_xlim([0, 200])
 
-    buffer_size = 200  # Size of the buffer to keep the most recent samples
+    buffer_size = 200
 
     print('Press Ctrl-C in the console to break the while loop.')
 
@@ -36,8 +36,8 @@ if __name__ == "__main__":
         while True:
             pulse_ox_data, _ = inlet.pull_chunk(timeout=1, max_samples=10)
 
-            for j, data_point in enumerate(pulse_ox_data):
-                ch_data = data_point[0]  # Assuming data_point is an array and the required data is the first element
+            for data_point in pulse_ox_data:
+                ch_data = data_point[0] # Get the first (and only) channel
                 # print(ch_data)
 
                 # Update y data
@@ -54,10 +54,8 @@ if __name__ == "__main__":
                 line.set_ydata(y)
                 ax.relim()
                 ax.autoscale_view(True, True, True)
-                
-                if j % 1 == 0:
-                    plt.draw()
-                    plt.pause(0.005)
+                plt.draw()
+                plt.pause(0.005)
 
                 # Update counter and possibly reset
                 i += 1
